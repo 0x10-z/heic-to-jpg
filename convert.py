@@ -32,9 +32,9 @@ def heic_to_jpg(input_path, output_path, quality=100):
             date_suffix = date_suffix.replace(':', '-')
             print(date_suffix)
 
-    if date_suffix:
-        base_name = os.path.splitext(os.path.basename(output_path))[0]
-        output_path = os.path.join(os.path.dirname(output_path), f"{date_suffix}_{base_name}.jpg")
+    # if date_suffix:
+    #     base_name = os.path.splitext(os.path.basename(output_path))[0]
+    #     output_path = os.path.join(os.path.dirname(output_path), f"{date_suffix}_{base_name}.jpg")
                     
     image.save(output_path, "JPEG", quality=quality, exif=exifdata)
     
