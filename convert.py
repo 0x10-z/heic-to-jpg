@@ -2,9 +2,7 @@ from PIL import Image
 import pyheif
 import os
 from PIL.ExifTags import TAGS
-from datetime import datetime
 from pillow_heif import register_heif_opener
-from PIL import ExifTags
 
 register_heif_opener()
 
@@ -27,10 +25,9 @@ def heic_to_jpg(input_path, output_path, quality=100):
     # looping through all the tags present in exifdata
     for tagid in exifdata:
         tagname = TAGS.get(tagid, tagid)
-        if tagname is "DateTime":
+        if tagname == "DateTime":
             date_suffix = exifdata.get(tagid)
             date_suffix = date_suffix.replace(':', '-')
-            print(date_suffix)
 
     # if date_suffix:
     #     base_name = os.path.splitext(os.path.basename(output_path))[0]
@@ -52,13 +49,15 @@ def convert_and_delete_heic_files(directory, output_directory, quality=100):
                 if not os.path.exists(os.path.dirname(output_path)):
                     os.makedirs(os.path.dirname(output_path))
                 
-                heic_to_jpg(input_path, output_path, quality)
-                print(f"Converted {input_path} to {output_path}")
-                
-                #os.remove(input_path)
-                print(f"Deleted {input_path}")
+                if not os.path.exists(output_path):
+                    heic_to_jpg(input_path, output_path, quality)
+                    print(f"[+] Converted {input_path} to {output_path}. Deleting old path.")
+                    
+                    os.remove(input_path)
+                else:
+                    print(f"[-] Skipping... {input_path}. Already converted")
                 
 # Example usage
-input_directory = "/mnt/d/Google Drive/A"
-output_directory = "/mnt/d/Google Drive/A"
-convert_and_delete_heic_files(input_directory, output_directory, 100)
+input_directory = "/mnt/d/Google Drive/Fotos Agosto Lau"
+output_directory = "/mnt/d/Google Drive/Fotos Agosto Lau"
+convert_and_delete_heic_files(input_directory, output_directory, 80)
